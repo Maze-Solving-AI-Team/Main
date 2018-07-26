@@ -1,9 +1,8 @@
 # Import modules
-import sys, pygame, time, math, MSADir
+import sys, pygame, time, math
 from time import sleep
 from pygame.locals import *
 from PIL import Image
-from MSADir import *
 
 # Initialize
 img = Image.open('maze.png')
@@ -13,7 +12,7 @@ height = img.height * change
 screen = pygame.display.set_mode((width,height))
 background = pygame.image.load('maze.png').convert()
 newscreen = pygame.transform.scale(background, (width, height))
-
+sleep = 0.01
 
 #Colors
 color = (0, 188, 0)
@@ -24,11 +23,11 @@ red = (255, 0, 0)
 green = (0, 188, 0)
 
 # Recognizing black/white
-print(width, height)
+#print(width, height)
 size = [img.size]
-print(size[0])
+#print(size[0])
 colors = img.getcolors()
-print(colors)
+#print(colors)
 pix = img.load()
 list = []
 
@@ -38,7 +37,7 @@ for x in range(0,180):
         list.append(x)
 
 xvalueOfStart = list[0] * change
-print(xvalueOfStart)
+#print(xvalueOfStart)
 
 blockSize = len(list) * change
 
@@ -52,7 +51,7 @@ for x in range(0,180):
         list.append(x)
 
 xvalueOfEnd = list[0] * change
-print(xvalueOfEnd)
+#print(xvalueOfEnd)
 
 pygame.draw.rect(newscreen, color, pygame.Rect(xvalueOfStart, yvalueOfStart, blockSize, blockSize))
 screen.blit(newscreen, (0,0))
@@ -60,7 +59,7 @@ pygame.display.update()
 time.sleep(0.1)
 
 # Function to move forward
-def moveUp(x, y, blocksize, newcolor):
+def moveUp(x, y, blocksize, newcolor, sleep):
     global direction
     pygame.draw.rect(newscreen, newcolor, pygame.Rect(x, y, blocksize, blocksize))
     pygame.draw.rect(newscreen, color, pygame.Rect(x, y - blocksize, blocksize, blocksize))
@@ -71,9 +70,10 @@ def moveUp(x, y, blocksize, newcolor):
     currentY = y - blocksize
     currentX = x
     direction = 1
+    time.sleep(sleep)
 
 # Function to move left
-def moveDown(x, y, blocksize, newcolor):
+def moveDown(x, y, blocksize, newcolor, sleep):
     global direction
     pygame.draw.rect(newscreen, newcolor, pygame.Rect(x, y, blocksize, blocksize))
     pygame.draw.rect(newscreen, color, pygame.Rect(x, y + blocksize, blocksize, blocksize))
@@ -84,9 +84,10 @@ def moveDown(x, y, blocksize, newcolor):
     currentY = y + blocksize
     currentX = x
     direction = 4
+    time.sleep(sleep)
     
 # Function to move left  
-def moveLeft(x, y, blocksize, newcolor):
+def moveLeft(x, y, blocksize, newcolor, sleep):
     global direction
     pygame.draw.rect(newscreen, newcolor, pygame.Rect(x, y, blocksize, blocksize))
     pygame.draw.rect(newscreen, color, pygame.Rect(x - blocksize, y, blocksize, blocksize))
@@ -97,9 +98,10 @@ def moveLeft(x, y, blocksize, newcolor):
     currentX = x - blocksize
     currentY = y
     direction = 3
+    time.sleep(sleep)
 
 # Function to move right
-def moveRight(x, y, blocksize, newcolor):
+def moveRight(x, y, blocksize, newcolor, sleep):
     global direction
     pygame.draw.rect(newscreen, newcolor, pygame.Rect(x, y, blocksize, blocksize))
     pygame.draw.rect(newscreen, color, pygame.Rect(x + blocksize, y, blocksize, blocksize))
@@ -110,6 +112,7 @@ def moveRight(x, y, blocksize, newcolor):
     currentX = x + blocksize
     currentY = y
     direction = 2
+    time.sleep(sleep)
 
 #Initialization of currentX and currentY
 def varsInit(x, y):
@@ -123,82 +126,50 @@ def varsInit(x, y):
 #Algorithm to determine direction to move if facing up
 def up(replace):
     if newscreen.get_at((currentX + blockSize, currentY)) == white:#right
-        moveRight(currentX, currentY, blockSize, replace)
-        print("up-Move right called")
-        time.sleep(0.01)
+        moveRight(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX, currentY - blockSize)) == white:#up        
-        moveUp(currentX, currentY, blockSize, replace)
-        print("up-Move up called")
-        time.sleep(0.01)
+        moveUp(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX - blockSize, currentY)) == white:#left
-        moveLeft(currentX, currentY, blockSize, replace)
-        print("up-Move left called")
-        time.sleep(0.01)
+        moveLeft(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX, currentY + blockSize)) == white:#down
-        moveDown(currentX, currentY, blockSize, replace)
-        print("up-Move down called")
-        time.sleep(0.01)
+        moveDown(currentX, currentY, blockSize, replace, sleep)
     
 #Algorithm to determine direction to move if facing right
 def right(replace):
     if newscreen.get_at((currentX, currentY + blockSize)) == white:#down
-        moveDown(currentX, currentY, blockSize, replace)
-        print("right-Move down called")
-        time.sleep(0.01)
+        moveDown(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX + blockSize, currentY)) == white:#right
-        moveRight(currentX, currentY, blockSize, replace)
-        print("right-Move right called")
-        time.sleep(0.01)
+        moveRight(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX, currentY - blockSize)) == white:#up        
-        moveUp(currentX, currentY, blockSize, replace)
-        print("right-Move up called")
-        time.sleep(0.01)
+        moveUp(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX - blockSize, currentY)) == white:#left
-        moveLeft(currentX, currentY, blockSize, replace)
-        print("right-Move left called")
-        time.sleep(0.01)
+        moveLeft(currentX, currentY, blockSize, replace, sleep)
     
 #Algorithm to determine direction to move if facing left
 def left(replace):
     if newscreen.get_at((currentX, currentY - blockSize)) == white:#up        
-        moveUp(currentX, currentY, blockSize, replace)
-        print("left-Move up called")
-        time.sleep(0.01)
+        moveUp(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX - blockSize, currentY)) == white:#left
-        moveLeft(currentX, currentY, blockSize, replace)
-        print("left-Move left called")
-        time.sleep(0.01)
+        moveLeft(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX, currentY + blockSize)) == white:#down
-        moveDown(currentX, currentY, blockSize, replace)
-        print("left-Move down called")
-        time.sleep(0.01)
+        moveDown(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX + blockSize, currentY)) == white:#right
-        moveRight(currentX, currentY, blockSize, replace)
-        print("left-Move right called")
-        time.sleep(0.01)
+        moveRight(currentX, currentY, blockSize, replace, sleep)
 
 #Algorithm to determine direction to move if facing down
 def down(replace):
     if newscreen.get_at((currentX - blockSize, currentY)) == white:#left
-        moveLeft(currentX, currentY, blockSize, replace)
-        print("down-Move left called")
-        time.sleep(0.01)
+        moveLeft(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX, currentY + blockSize)) == white:#down
-        moveDown(currentX, currentY, blockSize, replace)
-        print("down-Move down called")
-        time.sleep(0.01)
+        moveDown(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX + blockSize, currentY)) == white:#right
-        moveRight(currentX, currentY, blockSize, replace)
-        print("down-Move right called")
-        time.sleep(0.01)
+        moveRight(currentX, currentY, blockSize, replace, sleep)
     elif newscreen.get_at((currentX, currentY - blockSize)) == white:#up        
-        moveUp(currentX, currentY, blockSize, replace)
-        print("down-Move up called")
-        time.sleep(0.01)
+        moveUp(currentX, currentY, blockSize, replace, sleep)
 
 varsInit(xvalueOfStart, yvalueOfStart)
 
-moveUp(currentX, currentY, blockSize, white)
+moveUp(currentX, currentY, blockSize, white, sleep)
 
 #time.sleep(0.1)
 
