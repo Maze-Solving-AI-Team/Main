@@ -3,6 +3,7 @@ import sys, pygame, time, math
 from time import sleep
 from pygame.locals import *
 from PIL import Image
+import timing
 
 # Initialize
 img = Image.open('maze.png')
@@ -170,18 +171,6 @@ def down(replace):
 varsInit(xvalueOfStart, yvalueOfStart)
 
 moveUp(currentX, currentY, blockSize, white, sleep)
-
-#time.sleep(0.1)
-
-#moveLeft(currentX, currentY, blockSize)
-#time.sleep(1)
-
-#moveDown(currentX, currentY, blockSize)
-#time.sleep(1)
-
-#moveRight(currentX, currentY, blockSize)
-#time.sleep(1)
-
 '''
 1 is up
 2 is right
@@ -201,5 +190,3 @@ while 0 != currentY:
         left(white)
     elif direction == 4:
         down(white)
-
-time.sleep(5)
